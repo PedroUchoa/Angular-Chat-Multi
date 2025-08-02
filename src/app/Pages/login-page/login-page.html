@@ -1,0 +1,34 @@
+<app-sign-layout>
+  <app-header-sign type="Sign In" />
+  <form [formGroup]="loginForm">
+    <input
+      id="login"
+      formControlName="login"
+      type="text"
+      placeholder="Login"
+      class="input-form"
+      [ngClass]="{
+        'invalid':
+        loginForm.controls['login'].errors?.['required'] &&
+        loginForm.controls['login'].touched}"
+    />
+
+    <input
+      id="password"
+      formControlName="password"
+      placeholder="Password"
+      type="password"
+      class="input-form"
+      [ngClass]="{
+        invalid:
+          loginForm.controls['password'].invalid &&
+          loginForm.controls['password'].touched
+      }"
+    />
+    <button>Sign Up</button>
+  </form>
+  <div class="sign-up">
+    <p>Don't have and account?</p>
+    <a routerLink="/sign-up">Sign Up</a>
+  </div>
+</app-sign-layout>

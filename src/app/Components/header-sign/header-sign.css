@@ -1,0 +1,12 @@
+.header-container{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  font-size: 38px;
+  margin-top: 40px;
+  font-weight:lighter;
+  color: #e0e1dd;
+}
+
