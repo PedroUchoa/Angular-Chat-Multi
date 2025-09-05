@@ -1,0 +1,109 @@
+<div class="chat-container">
+  <div class="servers-container">
+    <div class="user-container">
+      <img src="/user-icon.svg" alt="" />
+      <h1>{{ activedUser?.name }}</h1>
+    </div>
+    <div class="list-servers">
+      <div class="search-container">
+        <h2>Seus servers</h2>
+        <div class="input-container">
+          <img src="/search-icon.svg" alt="" />
+          <input type="text" placeholder="Pesquise um servidor" />
+        </div>
+      </div>
+      <ul class="servers">
+        @for(item of activedUser?.chatServers; track item.id){
+        <app-chat-box [serverName]="item.name" (click)="chatOpen(item)" />
+        }
+      </ul>
+    </div>
+    <div class="add-container">
+      <h2>Buscando um novo servidor?</h2>
+      <div class="button-container">
+        <button (click)="openModalSearch()">Buscar</button>
+        <button (click)="openModalCreate()">Criar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat">
+    @if (modalValue) {
+    <div class="chat-header">
+      <div class="chat-name">
+        <img src="/user-icon.svg" alt="" />
+        <h2>{{ selectedChatRoom?.name }}</h2>
+      </div>
+      <button class="close-button" (click)="closeConnection()">X</button>
+    </div>
+    <ul class="chat-body">
+      @for (item of selectedChatRoom?.listMessages; track $index) {
+      <div class="message-container" [ngClass]="{'receive':item.senderId != userId}">
+        <h2>{{ item.senderName }}</h2>
+        <h3>{{ item.content }}</h3>
+      </div>
+      }
+    </ul>
+    <form
+      class="chat-sender"
+      [formGroup]="messageForm"
+    >
+      <div class="sender-container">
+        <input
+          id="content"
+          formControlName="content"
+          type="text"
+          placeholder="Digite a sua mensagem"
+        />
+      </div>
+      <button (click)="sendMessage()"></button>
+    </form>
+    }
+  </div>
+</div>
+
+@if (modalSearch) {
+<div class="modal-container" (click)="closeModalSearch()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-top">
+      <h3>Adicione um servidor</h3>
+      <button (click)="closeModalSearch()">X</button>
+    </div>
+    <div class="modal-input">
+      <img src="/search-icon.svg" alt="" />
+      <input type="text" placeholder="Pesquise um servidor" />
+    </div>
+    <ul class="modal-servers">
+      @for (item of allServers; track $index) {
+      <app-server-search
+        (addToServer)="addUserToServer($event)"
+        [servers]="item"
+      />
+      }
+    </ul>
+  </div>
+</div>
+} @if (modalCreate) {
+<div class="modal-container" (click)="closeModalCreate()">
+  <div class="modal-create" (click)="$event.stopPropagation()">
+    <h2>Crie o seu proprio servidor!!</h2>
+    <form [formGroup]="createServerForm" (ngSubmit)="createServer()">
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        placeholder="Nome do Servidor"
+        class="input-form"
+      />
+      <input
+        type="text"
+        id="image"
+        formControlName="image"
+        placeholder="Url da Imagem"
+        class="input-form"
+      />
+      <button (onclick)="createServer()">Criar</button>
+    </form>
+  </div>
+</div>
+}
