@@ -3,6 +3,7 @@ import { LoginPage } from './Pages/login-page/login-page';
 import path from 'path';
 import { SignUpPage } from './Pages/sign-up-page/sign-up-page';
 import { ChatPage } from './Pages/chat-page/chat-page';
+import { authGuard } from './Services/auth-guard';
 
 export const routes: Routes = [
   {
@@ -18,11 +19,13 @@ export const routes: Routes = [
   {
     path: 'sign-up',
     component: SignUpPage,
-    pathMatch:'full'
+    pathMatch: 'full',
+    canActivate: [authGuard],
   },
   {
     path: 'chat',
-    component:ChatPage,
-    pathMatch:'full'
+    component: ChatPage,
+    pathMatch: 'full',
+    canActivate: [authGuard],
   },
 ];

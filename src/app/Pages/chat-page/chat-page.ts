@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostListener,
 } from '@angular/core';
 import { ServerSearch } from '../../Components/server-search/server-search';
 import {
@@ -32,7 +33,7 @@ export class ChatPage {
   selectedChatRoom: ServerInterface | null = null;
   modalValue: string | null = null;
   activedUser: UserInterface | null = null;
-  userId: string | null = null;
+  userToken: string | null = null;
 
   createServerForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -54,9 +55,8 @@ export class ChatPage {
   ) {}
 
   ngOnInit() {
-    this.userId = this.returnToken();
+    this.userToken = this.returnToken();
     this.testeUsers();
-    this.getAllServer();
   }
 
   openModalCreate() {
@@ -69,15 +69,20 @@ export class ChatPage {
 
   openModalSearch() {
     this.modalSearch = true;
+    this.getAllServer();
   }
+
   closeModalSearch() {
     this.modalSearch = false;
   }
 
   getAllServer() {
     this.chatApi.getAllServer().subscribe({
-      next: (data) => (this.allServers = data.content),
-      error: (err) => console.error(err),
+      next: (data) => {
+        this.allServers = data.content;
+        this.cdRef.detectChanges();
+      },
+      error: (err) => alert(err),
     });
   }
 
@@ -109,7 +114,7 @@ export class ChatPage {
 
     this.websocket.sendMessage(
       this.selectedChatRoom?.id,
-      this.userId,
+      this.activedUser?.id,
       this.messageForm.value.content
     );
     this.messageForm.reset();
@@ -121,7 +126,7 @@ export class ChatPage {
       .createServer(
         this.createServerForm.value.name,
         this.createServerForm.value.image,
-        this.userId
+        this.activedUser?.id
       )
       .subscribe({
         next: (response) => {
@@ -138,7 +143,7 @@ export class ChatPage {
   }
 
   testeUsers() {
-    this.userApi.getUserById(this.userId).subscribe({
+    this.userApi.getUserByTokenJWT(this.userToken).subscribe({
       next: (data) => {
         this.activedUser = data;
         this.cdRef.detectChanges();
@@ -165,13 +170,15 @@ export class ChatPage {
   }
 
   returnToken() {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem('id');
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      return sessionStorage.getItem('token');
     }
-    return null
+    return null;
   }
 
   ngOnDestroy() {
     this.websocket.disconnect();
   }
+
+
 }

@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { UserInterface } from '../Interfaces/user-interface';
 import { PageInterface } from '../Interfaces/PageInterface';
 
@@ -8,20 +8,41 @@ import { PageInterface } from '../Interfaces/PageInterface';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = `http://localhost:8080/api/users`;
+  private apiUrl = `http://localhost:8080`;
 
+  private readonly JWT_TOKEN = 'token';
   constructor(private http: HttpClient) {}
 
-  createUser(user:any):Observable<UserInterface>{
-    return this.http.post<UserInterface>(`${this.apiUrl}`,user);
+  login(form: any): Observable<any> {
+    return this.http
+      .post(`${this.apiUrl}/auth/login`, form)
+      .pipe(tap((response: any) => this.doLoginUser(response.JWT)));
   }
 
-  getAllUsers():Observable<PageInterface<UserInterface>>{
-    return this.http.get<PageInterface<UserInterface>>(this.apiUrl);
+  createUser(user: any): Observable<UserInterface> {
+    return this.http.post<UserInterface>(`${this.apiUrl}/api/users`, user);
   }
 
-  getUserById(id:any):Observable<UserInterface>{
-    return this.http.get<UserInterface>(`${this.apiUrl}/${id}`);
+  getAllUsers(): Observable<PageInterface<UserInterface>> {
+    return this.http.get<PageInterface<UserInterface>>(
+      `${this.apiUrl}/api/users`
+    );
   }
 
+  getUserById(id: any): Observable<UserInterface> {
+    return this.http.get<UserInterface>(`${this.apiUrl}/api/users/${id}`);
+  }
+
+  getUserByTokenJWT(token: any): Observable<UserInterface> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    let options = { headers: headers };
+    return this.http.get<UserInterface>(`${this.apiUrl}/api/users/token`,options);
+  }
+
+  doLoginUser(tokens: any) {
+    sessionStorage.setItem(this.JWT_TOKEN, tokens);
+  }
 }

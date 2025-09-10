@@ -38,7 +38,7 @@
     </div>
     <ul class="chat-body">
       @for (item of selectedChatRoom?.listMessages; track $index) {
-      <div class="message-container" [ngClass]="{'receive':item.senderId != userId}">
+      <div class="message-container" [ngClass]="{'receive':item.senderId != this.activedUser?.id}">
         <h2>{{ item.senderName }}</h2>
         <h3>{{ item.content }}</h3>
       </div>
