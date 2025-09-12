@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../Services/user-service';
 import { error } from 'node:console';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login-page',
@@ -33,16 +34,16 @@ export class LoginPage {
     ]),
   });
 
-  constructor(private userService: UserService, private route: Router) {}
+  constructor(private userService: UserService, private route: Router, private toastr: ToastrService) {}
 
   doLogin() {
     if (this.loginForm.valid) {
       this.userService.login(this.loginForm.value).subscribe({
-        next:(data) => {
-        this.route.navigate(['/chat']);
-      },
-      error:(err)=>alert(err)
-    })
+        next: (data) => {
+          this.route.navigate(['/chat']);
+        },
+        error: (err) => this.toastr.error(err.error.message),
+      });
     }else{
       //alert('erro Login')
     }

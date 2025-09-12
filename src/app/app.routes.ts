@@ -20,7 +20,6 @@ export const routes: Routes = [
     path: 'sign-up',
     component: SignUpPage,
     pathMatch: 'full',
-    canActivate: [authGuard],
   },
   {
     path: 'chat',

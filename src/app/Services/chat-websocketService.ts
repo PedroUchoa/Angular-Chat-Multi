@@ -2,16 +2,18 @@ import { Injectable } from '@angular/core';
 import { Client, IMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { MessageInterface } from '../Interfaces/message-interface';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatWebsocket {
   private stompClient!: Client;
+  private options = this.createHeader();
 
   connect(serverId: string, onMessage: (msg: any) => void) {
     this.stompClient = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+      webSocketFactory: () => new SockJS('http://localhost:8080/ws',this.options),
       reconnectDelay: 5000,
       debug: (msg) => console.log(msg),
     });
@@ -32,21 +34,29 @@ export class ChatWebsocket {
     this.stompClient.activate();
   }
 
-  sendMessage(serverId: string|undefined, senderId: any, content: any) {
+  sendMessage(serverId: string | undefined, senderId: any, content: any) {
     if (this.stompClient && this.stompClient.connected) {
       const message = { content, senderId };
       this.stompClient.publish({
         destination: `/app/chat/${serverId}/sendMessage`,
-        body:JSON.stringify(message)
+        body: JSON.stringify(message),
       });
     }
   }
 
-  disconnect(){
-    if(this.stompClient){
+  disconnect() {
+    if (this.stompClient) {
       this.stompClient.deactivate();
     }
   }
 
-
+  private createHeader() {
+    let token =
+      typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return { headers: headers };
+  }
 }

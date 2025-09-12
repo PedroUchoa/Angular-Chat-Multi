@@ -7,7 +7,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router)
   const userService = inject(UserService)
   const localToken =
-    typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;
+  typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;
 
   userService.getUserByTokenJWT(localToken).subscribe(
     (data)=>{},

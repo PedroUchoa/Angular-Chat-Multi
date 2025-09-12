@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ServerInterface } from '../Interfaces/serverInterface';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PageInterface } from '../Interfaces/PageInterface';
 
 
@@ -10,27 +10,44 @@ import { PageInterface } from '../Interfaces/PageInterface';
 })
 export class ChatApi {
   private apiUrl = `http://localhost:8080/api/chatServer`;
+  private token = typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient) {}
 
-  createServer(name:any, image:any,idUser:any):Observable<ServerInterface>{
-    const message = {name,image,idUser}
-    return this.http.post<ServerInterface>(`${this.apiUrl}`,message);
+  createServer(
+    name: any,
+    image: any,
+    idUser: any
+  ): Observable<ServerInterface> {
+    const message = { name, image, idUser };
+    let options = this.createHeader();
+    return this.http.post<ServerInterface>(`${this.apiUrl}`, message, options);
   }
 
-
-  getAllServer():Observable<PageInterface<ServerInterface>>{
-    return this.http.get<PageInterface<ServerInterface>>(this.apiUrl);
+  getAllServer(): Observable<PageInterface<ServerInterface>> {
+    let options = this.createHeader();
+    return this.http.get<PageInterface<ServerInterface>>(this.apiUrl,options);
   }
 
-  getServerById(id:string):Observable<ServerInterface>{
-    return this.http.get<ServerInterface>(`${this.apiUrl}/${id}`)
+  getServerById(id: string): Observable<ServerInterface> {
+    let options = this.createHeader();
+    return this.http.get<ServerInterface>(`${this.apiUrl}/${id}`,options);
   }
 
-  addUserToServer(id:string,userId?:string):Observable<ServerInterface>{
-    return this.http.post<ServerInterface>(`${this.apiUrl}/${id}/add/${userId}`,null);
+  addUserToServer(id: string, userId?: string): Observable<ServerInterface> {
+    let options = this.createHeader();
+    return this.http.post<ServerInterface>(
+      `${this.apiUrl}/${id}/add/${userId}`,
+      null,options
+    );
   }
 
-
+  private createHeader(){
+        let headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.token}`,
+        });
+        return { headers: headers };
+  }
 
 }

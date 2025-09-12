@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { UserInterface } from '../Interfaces/user-interface';
 import { PageInterface } from '../Interfaces/PageInterface';
 
@@ -9,8 +9,6 @@ import { PageInterface } from '../Interfaces/PageInterface';
 })
 export class UserService {
   private apiUrl = `http://localhost:8080`;
-
-  private readonly JWT_TOKEN = 'token';
   constructor(private http: HttpClient) {}
 
   login(form: any): Observable<any> {
@@ -24,25 +22,40 @@ export class UserService {
   }
 
   getAllUsers(): Observable<PageInterface<UserInterface>> {
+    let options = this.createHeader();
     return this.http.get<PageInterface<UserInterface>>(
-      `${this.apiUrl}/api/users`
+      `${this.apiUrl}/api/users`,
+      options
     );
   }
 
   getUserById(id: any): Observable<UserInterface> {
-    return this.http.get<UserInterface>(`${this.apiUrl}/api/users/${id}`);
+    let options = this.createHeader();
+    return this.http.get<UserInterface>(
+      `${this.apiUrl}/api/users/${id}`,
+      options
+    );
   }
 
   getUserByTokenJWT(token: any): Observable<UserInterface> {
+     let options = this.createHeader();
+    return this.http.get<UserInterface>(
+      `${this.apiUrl}/api/users/token`,
+      options
+    );
+  }
+
+  doLoginUser(tokens: any) {
+    sessionStorage.setItem('token', tokens);
+  }
+
+  private createHeader() {
+    let token =
+      typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
-    let options = { headers: headers };
-    return this.http.get<UserInterface>(`${this.apiUrl}/api/users/token`,options);
-  }
-
-  doLoginUser(tokens: any) {
-    sessionStorage.setItem(this.JWT_TOKEN, tokens);
+    return { headers: headers };
   }
 }
