@@ -40,7 +40,10 @@
       @for (item of selectedChatRoom?.listMessages; track $index) {
       <div class="message-container" [ngClass]="{'receive':item.senderId != this.activedUser?.id}">
         <h2>{{ item.senderName }}</h2>
-        <h3>{{ item.content }}</h3>
+        <div class="timeName">
+          <h3>{{ item.content }}</h3>
+          <h4>{{item.sendingTime | date : "HH:mm"}}</h4>
+        </div>
       </div>
       }
     </ul>

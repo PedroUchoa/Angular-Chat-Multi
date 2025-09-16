@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { SignLayout } from '../../Components/sign-layout/sign-layout';
 import { HeaderSign } from '../../Components/header-sign/header-sign';
 import {
@@ -10,7 +10,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../Services/user-service';
-import { error } from 'node:console';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -34,18 +33,18 @@ export class LoginPage {
     ]),
   });
 
-  constructor(private userService: UserService, private route: Router, private toastr: ToastrService) {}
+  constructor(private userService: UserService, private router: Router, private toastr: ToastrService) {}
 
   doLogin() {
     if (this.loginForm.valid) {
       this.userService.login(this.loginForm.value).subscribe({
         next: (data) => {
-          this.route.navigate(['/chat']);
+          this.router.navigate(['/chat']);
         },
         error: (err) => this.toastr.error(err.error.message),
       });
     }else{
-      //alert('erro Login')
+      this.toastr.warning('Complete your login informations');
     }
 
   }

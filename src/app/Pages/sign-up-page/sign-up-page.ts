@@ -2,10 +2,11 @@ import { error } from 'node:console';
 import { Component } from '@angular/core';
 import { SignLayout } from '../../Components/sign-layout/sign-layout';
 import { HeaderSign } from '../../Components/header-sign/header-sign';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../Services/user-service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -29,18 +30,19 @@ export class SignUpPage {
     name: new FormControl('', Validators.required),
   });
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,private toastr:ToastrService,private router:Router) {}
 
   signUp() {
     if (this.signupForm.valid) {
       this.userService.createUser(this.signupForm.value).subscribe({
         next: (data) => {
-          alert('Sign Up Successfully');
+          this.toastr.success('Sign Up Successfully');
+          this.router.navigate(['/login'])
         },
-        error: (e) => alert(e.error),
+        error: (err) => this.toastr.error(err.error.message),
       });
     } else {
-      alert('Error: Please check the fields and try again');
+      this.toastr.warning('Please check the fields and try again');
     }
   }
 }

@@ -19,6 +19,7 @@ import { UserService } from '../../Services/user-service';
 import { UserInterface } from '../../Interfaces/user-interface';
 import { ChatWebsocket } from '../../Services/chat-websocketService';
 import { MinChat } from '../../Interfaces/min-chat';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chat-page',
@@ -51,7 +52,8 @@ export class ChatPage {
     private chatApi: ChatApi,
     private userApi: UserService,
     private websocket: ChatWebsocket,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private toastr:ToastrService
   ) {}
 
   ngOnInit() {
@@ -87,6 +89,7 @@ export class ChatPage {
   }
 
   chatOpen(room: MinChat) {
+    this.websocket.disconnect();
     this.chatApi.getServerById(room.id).subscribe({
       next: (data) => {
         Promise.resolve().then(() => {
@@ -135,7 +138,8 @@ export class ChatPage {
           this.cdRef.detectChanges();
         },
         error: (err) => {
-          console.error(err);
+          console.log(err)
+          this.toastr.warning(err.error.message);
         },
       });
     this.closeModalCreate();
@@ -159,7 +163,7 @@ export class ChatPage {
         this.cdRef.detectChanges();
       },
       error: (err) => {
-        console.error(err);
+        this.toastr.warning(err.error.message);
       },
     });
   }
@@ -179,6 +183,4 @@ export class ChatPage {
   ngOnDestroy() {
     this.websocket.disconnect();
   }
-
-
 }
