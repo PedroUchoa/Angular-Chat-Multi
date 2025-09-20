@@ -1,59 +1,70 @@
-# AngularChat
+<h1 align="center"> Multi Chat Front </h1>
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.4.
+# Resumo do projeto
+Este é o frontend do projeto Multi Chat API, uma aplicação de chat em tempo real inspirada no Discord. A interface foi construída com Angular e TypeScript para proporcionar uma experiência de usuário dinâmica e responsiva. A comunicação com o backend é gerenciada utilizando WebSocket, com a ajuda das bibliotecas Stomp.js e SockJS.
 
-## Development server
+## Pré Requisitos
 
-To start a local development server, run:
+O que você precisa para instalar o software e como instalá-lo.
 
-```bash
+- Node.js e npm (ou Yarn)
+- Angular CLI (instale com npm install -g @angular/cli)
+
+## Instalando
+
+Passo a passo que mostram como colocar o ambiente de desenvolvimento em funcionamento.
+
+#### 1- Clonar o Repositório
+- Abra seu terminal ou prompt de comando e clone o projeto com o seguinte comando:
+
+```
+git clone https://github.com/PedroUchoa/Angular-Chat-Multi.git
+```
+
+#### 2- Instalar as Dependências
+
+- Navegue até o diretório do projeto e instale todas as dependências necessárias:
+
+```
+cd Angular-Chat-Multi
+npm install
+```
+
+#### 3- Configurar a Conexão com o Backend
+
+- Certifique-se de que o backend (projeto Java Spring Boot) está rodando em http://localhost:8080
+
+#### 4- Executar o Servidor de Desenvolvimento
+
+- Inicie a aplicação Angular com o seguinte comando:
+
+```
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+#### 5- Acessar a Aplicação
 
-## Code scaffolding
+- Abra seu navegador e navegue para http://localhost:4200 para começar a usar a interface do chat.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
-```
+## ✔️ Bibliotecas e tecnologias utilizadas
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- ``Angular 19``
+- ``TypeScript``
+- ``Stomp.js``
+- ``SockJS``
+- ``Toastr``
 
-```bash
-ng generate --help
-```
+## Funcionalidades Principais
 
-## Building
+- Registro e Login: Interface para criar uma conta ou acessar uma existente.
+- Listagem de Grupos: Visualize os grupos de conversa disponíveis.
+- -Criação de Grupos: Crie seus proprios grupos de conversa.
+- Entrada e Saída de Grupos: Junte-se ou saia dos grupos de forma intuitiva.
+- Chat em Tempo Real: Envie e receba mensagens instantaneamente dentro dos grupos, com suporte para comunicação bidirecional via WebSocket.
 
-To build the project run:
+## Autor
 
-```bash
-ng build
-```
+* **Pedro Uchôa** - *Dev Back-end Java* - [Github](https://github.com/PedroUchoa)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
